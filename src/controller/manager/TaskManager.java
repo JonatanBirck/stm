@@ -29,7 +29,7 @@ public class TaskManager {
     
     public void updateTask(Task task){
         
-        Validation validations = authenticateUpdate(task);
+        Validation validations = authenticateNextStage(task);
         boolean authenticate = validations.isValidated();
         
         if(authenticate){
@@ -104,36 +104,58 @@ public class TaskManager {
         validate.setAnnotations(annotations);
         return validate;  
     }        
-    
-    private Validation authenticateUpdate(Task task){
+
+    public Validation authenticateNextStage(Task task){
         
         Validation validate = new Validation(true);
-        ArrayList<String> annotations = new ArrayList();  
-        
-        //Validate - NameTask
-        //NameTask - 1           
-        if(task.getName().isEmpty() || task.getName().equals("Nome *")){
-            validate.setValidated(false);
-            annotations.add("O nome da tarefa não pode ser vazio");
-        } 
-
-        //Validate - DescriptionTask
-        //DescriptionTask - 1          
-        if(task.getDescriptionCreate().isEmpty() || task.getDescriptionCreate().equals("Descrição *")){
-            validate.setValidated(false);
-            annotations.add("A descrição da tarefa não pode ser vazia");
-        }           
-   
-        //Validate - TaskResponsability
+        ArrayList<String> annotations = new ArrayList();         
         int userResponsability = task.getUserResponsibility();
         
-        //TaskResponsability - 1 
-        if(userResponsability == 0){
-            validate.setValidated(false);
-            annotations.add("Verifique o responsável");
-        }    
-        
+        int state = task.getState()-1;
+        switch (state)
+        {
+            case 0: 
+                if(task.getName().isEmpty() || task.getName().equals("Nome da Tarefa *")){
+                    validate.setValidated(false);
+                    annotations.add("O nome da tarefa não pode ser vazio");
+                }      
+                if(task.getDescriptionCreate().isEmpty() || task.getDescriptionCreate().equals("Descrição da Tarefa *")){
+                    validate.setValidated(false);
+                    annotations.add("A descrição da tarefa não pode ser vazia");
+                }  
+                if(userResponsability == 0){
+                    validate.setValidated(false);
+                    annotations.add("Verifique o responsável");
+                }                 
+                break;
+            case 1:
+                if(task.getDescriptionAnalyze().isEmpty() || task.getDescriptionAnalyze().equals("Descrição da Analise *")){
+                    validate.setValidated(false);
+                    annotations.add("A descrição da analise da tarefa não pode ser vazia");
+                }  
+                if(userResponsability == 0){
+                    validate.setValidated(false);
+                    annotations.add("Verifique o responsável");
+                }                   
+                break;
+            case 2:
+                if(task.getDescriptionDoit().isEmpty() || task.getDescriptionDoit().equals("Descrição da Execução *")){
+                    validate.setValidated(false);
+                    annotations.add("A descrição da execução da tarefa não pode ser vazia");
+                }  
+                if(userResponsability == 0){
+                    validate.setValidated(false);
+                    annotations.add("Verifique o responsável");
+                }                   
+                break;      
+            case 3:
+                if(task.getDescriptionCheck().isEmpty() || task.getDescriptionCheck().equals("Descrição da Verificação *")){
+                    validate.setValidated(false);
+                    annotations.add("A descrição da verificação da tarefa não pode ser vazia");
+                }                  
+                break;                     
+        }
         validate.setAnnotations(annotations);
         return validate;  
-    }      
+    } 
 }

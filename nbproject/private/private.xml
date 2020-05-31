@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/Users/jonat/OneDrive/Documentos/NetBeansProjects/STM/src/controller/helper/Report.java</file>
+            <file>file:/C:/Users/jonat/OneDrive/Documentos/NetBeansProjects/STM/src/view/MainView.java</file>
+            <file>file:/C:/Users/jonat/OneDrive/Documentos/NetBeansProjects/STM/src/model/DB/ConnectionDB.java</file>
+            <file>file:/C:/Users/jonat/OneDrive/Documentos/NetBeansProjects/STM/src/view/components/ClassSelector.java</file>
+            <file>file:/C:/Users/jonat/OneDrive/Documentos/NetBeansProjects/STM/src/view/components/DialogSTM.java</file>
+            <file>file:/C:/Users/jonat/OneDrive/Documentos/NetBeansProjects/STM/src/view/classes/UserView.java</file>
+            <file>file:/C:/Users/jonat/OneDrive/Documentos/NetBeansProjects/STM/src/model/User.java</file>
+            <file>file:/C:/Users/jonat/OneDrive/Documentos/NetBeansProjects/STM/src/view/classes/ReportView.java</file>
+            <file>file:/C:/Users/jonat/OneDrive/Documentos/NetBeansProjects/STM/src/view/classes/FunctionView.java</file>
+            <file>file:/C:/Users/jonat/OneDrive/Documentos/NetBeansProjects/STM/src/view/classes/TaskView.java</file>
+            <file>file:/C:/Users/jonat/OneDrive/Documentos/NetBeansProjects/STM/src/view/components/ButtonSTM.java</file>
+            <file>file:/C:/Users/jonat/OneDrive/Documentos/NetBeansProjects/STM/src/view/components/BoxSTM.java</file>
+            <file>file:/C:/Users/jonat/OneDrive/Documentos/NetBeansProjects/STM/src/model/Task.java</file>
+            <file>file:/C:/Users/jonat/OneDrive/Documentos/NetBeansProjects/STM/src/view/classes/SectorView.java</file>
+            <file>file:/C:/Users/jonat/OneDrive/Documentos/NetBeansProjects/STM/src/view/classes/DepartmentView.java</file>
+            <file>file:/C:/Users/jonat/OneDrive/Documentos/NetBeansProjects/STM/src/view/pages/MainPageView.java</file>
+            <file>file:/C:/Users/jonat/OneDrive/Documentos/NetBeansProjects/STM/src/model/Department.java</file>
+            <file>file:/C:/Users/jonat/OneDrive/Documentos/NetBeansProjects/STM/src/controller/manager/TaskManager.java</file>
+            <file>file:/C:/Users/jonat/OneDrive/Documentos/NetBeansProjects/STM/src/view/components/FieldSTM.java</file>
+            <file>file:/C:/Users/jonat/OneDrive/Documentos/NetBeansProjects/STM/src/model/DB/tablesDB.sql</file>
+            <file>file:/C:/Users/jonat/OneDrive/Documentos/NetBeansProjects/STM/src/controller/helper/Validation.java</file>
+        </group>
+    </open-files>
+</project-private>

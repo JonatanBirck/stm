@@ -72,13 +72,13 @@ INSERT INTO "functions" (name,description,ref_sector) VALUES ('Avaliador','Respo
 INSERT INTO "functions" (name,description,ref_sector) VALUES ('Diretor Geral','Dono da empresa',14);
 INSERT INTO "functions" (name,description,ref_sector) VALUES ('Sub-Diretor','CEO da emrpesa',14);
 
-INSERT INTO "tasks" (name,ref_user_created,description_create_task,ref_user_responsibility) VALUES ('Verificar Bug',6,'Foi registrado um bug na tela x, precisa resolver o mesmo',1);
-INSERT INTO "tasks" (name,ref_user_created,description_create_task,ref_user_responsibility) VALUES ('Verificar Erro',2,'Foi registrado um erro ao tentar acessar o relatorio x',1);
-INSERT INTO "tasks" (name,ref_user_created,description_create_task,ref_user_responsibility) VALUES ('Verificar Disponibilidade',3,'Verificar disponibilidade de horarios para aplicar treinamento ao cliente x',1);
-INSERT INTO "tasks" (name,ref_user_created,description_create_task,ref_user_responsibility) VALUES ('Ajustar Férias',4,'Verificar férias e passar ao RH',1);
-INSERT INTO "tasks" (name,ref_user_created,description_create_task,ref_user_responsibility) VALUES ('Marcar reunião',5,'Cliente x mandou uma solicitação de reunião para o mes x, verificar',1);
-INSERT INTO "tasks" (name,ref_user_created,description_create_task,ref_user_responsibility) VALUES ('Verificar Banco de Dados',2,'Banco de Dados lendo ao pesquisar x coisa, verificar o que pode ser feito',1);
-INSERT INTO "tasks" (name,ref_user_created,description_create_task,ref_user_responsibility) VALUES ('Verificar Consulta',2,'Relatorio retornando vazio em consulta',1);
+INSERT INTO "tasks" (name,ref_user_created,date_create,description_create_task,ref_user_responsibility) VALUES ('Verificar Bug',6,'23-01-2020','Foi registrado um bug na tela x, precisa resolver o mesmo',1);
+INSERT INTO "tasks" (name,ref_user_created,date_create,description_create_task,ref_user_responsibility) VALUES ('Verificar Erro',2,'14-02-2020','Foi registrado um erro ao tentar acessar o relatorio x',1);
+INSERT INTO "tasks" (name,ref_user_created,date_create,description_create_task,ref_user_responsibility) VALUES ('Verificar Disponibilidade',3,'19-05-2020','Verificar disponibilidade de horarios para aplicar treinamento ao cliente x',1);
+INSERT INTO "tasks" (name,ref_user_created,date_create,description_create_task,ref_user_responsibility) VALUES ('Ajustar Férias',4,'01-04-2020','Verificar férias e passar ao RH',1);
+INSERT INTO "tasks" (name,ref_user_created,date_create,description_create_task,ref_user_responsibility) VALUES ('Marcar reunião',5,'09-04-2020','Cliente x mandou uma solicitação de reunião para o mes x, verificar',1);
+INSERT INTO "tasks" (name,ref_user_created,date_create,description_create_task,ref_user_responsibility) VALUES ('Verificar Banco de Dados',2,'15-03-2020','Banco de Dados lendo ao pesquisar x coisa, verificar o que pode ser feito',1);
+INSERT INTO "tasks" (name,ref_user_created,date_create,description_create_task,ref_user_responsibility) VALUES ('Verificar Consulta',2,'19-02-2020','Relatorio retornando vazio em consulta',1);
 
 UPDATE users SET ref_function = 1 WHERE id = 1;
 UPDATE users SET ref_function = 3 WHERE id = 2;

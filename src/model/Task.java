@@ -1,6 +1,6 @@
 package model;
 
-import java.sql.Date;
+import java.util.Date;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -408,5 +408,24 @@ public class Task {
 
     public Icon getIcon(int i) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public String getStatus(int state) {
+        switch (state) {
+            case -1:
+                return "Cancelada";
+            case 0:
+                return "Criação da Tarefa";
+            case 1:
+                return "Em análise";
+            case 2:
+                return "Em execução";
+            case 3:
+                return "Em verificação";
+            case 4:
+                return "Concluída";
+        }
+
+        return "";
     }
 }

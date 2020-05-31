@@ -29,6 +29,7 @@ import model.User;
 import view.MainView;
 import view.classes.DepartmentView;
 import view.classes.FunctionView;
+import view.classes.ReportView;
 import view.classes.SectorView;
 import view.classes.TaskView;
 import view.classes.UserView;
@@ -72,7 +73,7 @@ public class ClassSelector extends JFrame {
         
         //FRAME
         this.setLocation(Resolution.getInstance().getCenterResolution(size));
-        Dimension sizeFrame = new Dimension((int)(size.x*1.01),size.y);
+        Dimension sizeFrame = new Dimension((int)(size.x*1.01),(int)(size.y*0.95));
         this.setSize(sizeFrame);
         this.setIconImage(STM.getInstance().getIcon(32).getImage());
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -214,7 +215,12 @@ public class ClassSelector extends JFrame {
                             methods[0] = TaskView.class.getDeclaredMethod("setUserResponsability",User.class);
                             methods[1] = ClassSelector.class.getDeclaredMethod("disposePainel");
                             objects[0] = user;
-                            break;                           
+                            break;         
+                        case "report" :
+                            methods[0] = ReportView.class.getDeclaredMethod("setUserResponsability",User.class);
+                            methods[1] = ClassSelector.class.getDeclaredMethod("disposePainel");
+                            objects[0] = user;
+                            break;                              
                     }                    
                     jpanelBoxes.add(new BoxSTM(true,methods,objects,user.getId(),"user","Usuários",user.getName(),SectorManager.getInstance().getSector(user.getFunctionId()).getName(), Color.BLUE,new Point(250,250)));
                 }
@@ -296,6 +302,47 @@ public class ClassSelector extends JFrame {
                     //jpanelBoxes.add(new BoxSTM(true,task.getId(),"task",state,task.getName(),task.getDateCreate().toString(),stateColor,new Point(250,250)));
                 }
                 break;  
+            case "stateTask" : 
+                ArrayList<Integer> states = new ArrayList();
+                states.add(-1);
+                states.add(1);
+                states.add(2);
+                states.add(3);
+                states.add(4);
+                for(Integer state : states)
+                {
+                    Method[] methods = {null,null};
+                    Object[] objects = {null};
+                    methods[0] = ReportView.class.getDeclaredMethod("setIdStateSelected",int.class);
+                    methods[1] = ClassSelector.class.getDeclaredMethod("disposePainel");
+                    objects[0] = state;
+                    
+                    Color stateColor = Color.BLUE;
+                    switch(state){
+                        case -1 : 
+                            stateColor = Color.RED;
+                            break;
+                        case 0 : 
+                            stateColor = Color.ORANGE;
+                            break;
+                        case 1 : 
+                            stateColor = Color.GRAY;
+                            break;
+                        case 2 : 
+                            stateColor = Color.BLUE;
+                            break;
+                        case 3 : 
+                            stateColor = Color.YELLOW;
+                            break;     
+                        case 4 : 
+                            stateColor = Color.GREEN;
+                            break;                               
+                    }
+                    
+                    jpanelBoxes.add(new BoxSTM(true,methods,objects,state,"stateTask","Estado",new Task().getStatus(state),"Selecione", stateColor,new Point(250,250)));
+                }
+                
+                break;
         }
         
         //PAINT CRUD

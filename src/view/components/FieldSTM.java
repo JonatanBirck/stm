@@ -11,14 +11,17 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.text.MaskFormatter;
 
 public class FieldSTM extends JPanel {
-    
+
     private String text;
     private ImageIcon icon;
     private Point size = new Point();
@@ -26,206 +29,242 @@ public class FieldSTM extends JPanel {
     TYPE = 0 NORMAL
     TYPE = 1 PASSWORD
     TYPE = 2 SELECTOR
-    */
+     */
     private int type = 0;
     private String classNameOrigin = "";
     private String classNameDestiny = "";
-     
-    private final JPanel jpanel2 = new RoundedPanel(18); 
+
+    private final JPanel jpanel2 = new RoundedPanel(18);
     private final JPanel jpanel3 = new RoundedPanel(20);
     private final JLabel iconLabel = new JLabel();
     private final JTextField inputField = new JTextField();
     private final JPasswordField inputFieldPassword = new JPasswordField();
     private final JTextField inputFieldSelector = new JTextField();
-    
+    private JFormattedTextField fieldData = new JFormattedTextField();
+    private JTextArea areaInputField = new JTextArea();
+
     private final ImageIcon ICON_SEARCH = new ImageIcon(getClass().getResource("/view/img/procurar24x24.png"));
     private final ImageIcon ICON_HIDE = new ImageIcon(getClass().getResource("/view/img/hide24x24.png"));
     private final ImageIcon ICON_OPEN = new ImageIcon(getClass().getResource("/view/img/eye24x24.png"));
     private ImageIcon PASSWORD_ICON = ICON_HIDE;
+    private boolean isEnable = false;
 
-    public FieldSTM(){
-        
+    public FieldSTM() {
+
     }
-    
-    public FieldSTM(String placeHolder, Point size){
+
+    public FieldSTM(String placeHolder, Point size) {
         this.text = placeHolder;
         this.size = size;
-       
+
+        createLabel(size);
+    }
+
+    public FieldSTM(String placeHolder, Point size, boolean isEnable) {
+        this.isEnable = isEnable;
+        this.text = placeHolder;
+        this.size = size;
+
         createLabel(size);
     }
     
-    public FieldSTM(String placeHolder,ImageIcon icon, Point size){
+    public FieldSTM(String placeHolder, int type, Point size, boolean isEnable) {
+        this.isEnable = isEnable;
+        this.text = placeHolder;
+        this.type = type;
+        this.size = size;
+
+        createLabel(size);
+    }    
+
+    public FieldSTM(String placeHolder, ImageIcon icon, Point size) {
         this.text = placeHolder;
         this.icon = icon;
         this.size = size;
 
-        createLabel(size);  
+        createLabel(size);
     }
-    
-    public FieldSTM(String placeHolder,int type, Point size){
+
+    public FieldSTM(String placeHolder, int type, Point size) {
         this.text = placeHolder;
         this.type = type;
         this.size = size;
-        
-        createLabel(size); 
-    }    
-    
-    public FieldSTM(String placeHolder,int type, Point size,String classNameOrigin,String classNameDestiny){
+
+        createLabel(size);
+    }
+
+    public FieldSTM(String placeHolder, int type, Point size, String classNameOrigin, String classNameDestiny) {
         this.text = placeHolder;
         this.type = type;
         this.size = size;
         this.classNameOrigin = classNameOrigin;
         this.classNameDestiny = classNameDestiny;
-        
-        createLabel(size); 
+
+        createLabel(size);
     }
-    
-    private JPanel createLabel(Point size){
-        
+
+    private JPanel createLabel(Point size) {
+
         //PAINELOUT
         this.setOpaque(false);
         this.setSize(Resolution.getInstance().getDimension(size));
         this.setLayout(null);
         this.setBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f));
-        
+
         //PAINEL CENTRAL
         jpanel2.setBackground(Color.WHITE);
         jpanel2.setOpaque(false);
         Point jpanel2location = Resolution.getInstance().getPointMarginX(size, 1);
         jpanel2.setLocation(jpanel2location);
-        Dimension jpanel2sub = new Dimension((jpanel2location.x*2),(jpanel2location.y*2));
+        Dimension jpanel2sub = new Dimension((jpanel2location.x * 2), (jpanel2location.y * 2));
         Dimension sizeJpanel2 = Resolution.getInstance().subtractDimension(size, jpanel2sub);
         jpanel2.setSize(sizeJpanel2);
         jpanel2.setLayout(null);
         this.add(jpanel2);
-        
+
         //PAINELMARGIN
         jpanel3.setBackground(Color.GRAY);
         jpanel3.setOpaque(false);
         Point jpanel3location = Resolution.getInstance().getPointMarginX(size, 0.65);
         jpanel3.setLocation(jpanel3location);
-        Dimension jpanel3sub = new Dimension((jpanel3location.x*2),(jpanel3location.y*2));
+        Dimension jpanel3sub = new Dimension((jpanel3location.x * 2), (jpanel3location.y * 2));
         Dimension sizeJpanel3 = Resolution.getInstance().subtractDimension(size, jpanel3sub);
         jpanel3.setSize(sizeJpanel3);
         jpanel3.setLayout(null);
-        this.add(jpanel3);  
-        
+        this.add(jpanel3);
+
         //ICON
-        Dimension sizeIconLabel = new Dimension(0,0);
-        if(icon != null){
+        Dimension sizeIconLabel = new Dimension(0, 0);
+        if (icon != null) {
             iconLabel.setIcon(icon);
-            iconLabel.setLocation(0,0);     
-            sizeIconLabel = new Dimension((int) (sizeJpanel2.width*0.15),sizeJpanel2.height);
+            iconLabel.setLocation(0, 0);
+            sizeIconLabel = new Dimension((int) (sizeJpanel2.width * 0.15), sizeJpanel2.height);
             iconLabel.setSize(sizeIconLabel);
             iconLabel.setHorizontalAlignment(SwingConstants.CENTER);
             jpanel2.add(iconLabel);
         }
-        
+
         //TEXT - PLACEHOLDER
-        if(type == 0)
-        {
+        if (type == 0) {
+
             inputField.setFont(new Font("Lucida Sans Unicode", 0, 14));
-            inputField.setForeground(new Color(120, 120, 120));
             inputField.setText(text);
             inputField.setBorder(null);
-            inputField.setLocation(sizeIconLabel.width + (int) (sizeJpanel2.width*0.03),1);
-            Dimension sizeText = new Dimension((int)(sizeJpanel2.width*0.94)-sizeIconLabel.width,sizeJpanel2.height-3);
+            inputField.setLocation(sizeIconLabel.width + (int) (sizeJpanel2.width * 0.03), 1);
+            Dimension sizeText = new Dimension((int) (sizeJpanel2.width * 0.94) - sizeIconLabel.width, sizeJpanel2.height - 3);
             inputField.setSize(sizeText);
-            if(icon != null){
+            if (icon != null) {
                 inputField.setFocusable(false);
             }
-            inputField.addFocusListener(new FocusListener() {
-                public void focusGained(FocusEvent evt) {
-                    String textInputField = inputField.getText();
-                    if (textInputField.equals(text)) {
-                        inputField.setText("");
+            if (!isEnable) {
+                inputField.setForeground(new Color(120, 120, 120));
+                inputField.addFocusListener(new FocusListener() {
+                    public void focusGained(FocusEvent evt) {
+                        String textInputField = inputField.getText();
+                        if (textInputField.equals(text)) {
+                            inputField.setText("");
+                        }
+
+                        alertState(true, false);
                     }
 
-                    alertState(true,false);
-                }
-                public void focusLost(FocusEvent evt) {
-                    String textInputField = inputField.getText();
-                    if (textInputField.equals("")) {
-                        inputField.setText(text);
+                    public void focusLost(FocusEvent evt) {
+                        String textInputField = inputField.getText();
+                        if (textInputField.equals("")) {
+                            inputField.setText(text);
+                        }
+
+                        alertState(false, false);
+                    }
+                });
+                inputField.addMouseListener(new MouseAdapter() {
+                    public void mouseEntered(MouseEvent evt) {
+                        jpanel2.setBackground(new Color(245, 245, 245));
+                        inputField.setBackground(new Color(245, 245, 245));
                     }
 
-                    alertState(false,false);
-                }
-            });
-            inputField.addMouseListener(new MouseAdapter() {
-                public void mouseEntered(MouseEvent evt) {
-                    jpanel2.setBackground(new Color(245, 245, 245));
-                    inputField.setBackground(new Color(245, 245, 245));
-                }
-                public void mouseExited(MouseEvent evt) {
-                    jpanel2.setBackground(new Color(255, 255, 255));
-                    inputField.setBackground(new Color(255, 255, 255));
-                }
-            });
-            jpanel2.add(inputField); 
+                    public void mouseExited(MouseEvent evt) {
+                        jpanel2.setBackground(new Color(255, 255, 255));
+                        inputField.setBackground(new Color(255, 255, 255));
+                    }
+                });
+            } else {
+                inputField.setFont(new Font("Lucida Sans Unicode", Font.BOLD, 14));
+                inputField.setForeground(Color.BLACK);
+                inputField.setEditable(!isEnable);
+                inputField.setBackground(Color.white);
+            }
+            jpanel2.add(inputField);
         }
-        
+
         //PASSWORDFIELD
-        Dimension sizeTextPassword = new Dimension((int)(sizeJpanel2.width*0.94)-sizeIconLabel.width,sizeJpanel2.height-3);
-        if(type == 1)
-        {
+        Dimension sizeTextPassword = new Dimension((int) (sizeJpanel2.width * 0.94) - sizeIconLabel.width, sizeJpanel2.height - 3);
+        if (type == 1) {
             inputFieldPassword.setFont(new Font("Lucida Sans Unicode", 0, 14));
-            inputFieldPassword.setForeground(new Color(120, 120, 120));
             inputFieldPassword.setText(text);
             inputFieldPassword.setEchoChar((char) 0);
             inputFieldPassword.setBorder(null);
-            inputFieldPassword.setLocation(sizeIconLabel.width + (int) (sizeJpanel2.width*0.03),1);
+            inputFieldPassword.setLocation(sizeIconLabel.width + (int) (sizeJpanel2.width * 0.03), 1);
             inputFieldPassword.setSize(sizeTextPassword);
-            if(icon != null){
+            if (icon != null) {
                 inputFieldPassword.setFocusable(false);
             }
-            inputFieldPassword.addFocusListener(new FocusListener() {
-                public void focusGained(FocusEvent evt) {
-                    String textInputField = new String(inputFieldPassword.getPassword());
-                    if (textInputField.equals(text)) {
-                        inputFieldPassword.setText("");
-                        inputFieldPassword.setEchoChar('*');
+
+            if (!isEnable) {
+                inputFieldPassword.setForeground(new Color(120, 120, 120));
+                inputFieldPassword.addFocusListener(new FocusListener() {
+                    public void focusGained(FocusEvent evt) {
+                        String textInputField = new String(inputFieldPassword.getPassword());
+                        if (textInputField.equals(text)) {
+                            inputFieldPassword.setText("");
+                            inputFieldPassword.setEchoChar('*');
+                        }
+
+                        alertState(true, false);
                     }
 
-                    alertState(true,false);
-                }
-                public void focusLost(FocusEvent evt) {
-                    String textInputField = new String(inputFieldPassword.getPassword());
-                    if (textInputField.equals("")) {
-                        inputFieldPassword.setText(text);
-                        inputFieldPassword.setEchoChar((char) 0);
+                    public void focusLost(FocusEvent evt) {
+                        String textInputField = new String(inputFieldPassword.getPassword());
+                        if (textInputField.equals("")) {
+                            inputFieldPassword.setText(text);
+                            inputFieldPassword.setEchoChar((char) 0);
+                        }
+                        alertState(false, false);
                     }
-                    alertState(false,false);
-                }
-            });
-            inputFieldPassword.addMouseListener(new MouseAdapter() {
-                public void mouseEntered(MouseEvent evt) {
-                    jpanel2.setBackground(new Color(245, 245, 245));
-                    inputFieldPassword.setBackground(new Color(245, 245, 245));
-                }
-                public void mouseExited(MouseEvent evt) {
-                    jpanel2.setBackground(new Color(255, 255, 255));
-                    inputFieldPassword.setBackground(new Color(255, 255, 255));
-                }
-            });
-            jpanel2.add(inputFieldPassword); 
+                });
+                inputFieldPassword.addMouseListener(new MouseAdapter() {
+                    public void mouseEntered(MouseEvent evt) {
+                        jpanel2.setBackground(new Color(245, 245, 245));
+                        inputFieldPassword.setBackground(new Color(245, 245, 245));
+                    }
+
+                    public void mouseExited(MouseEvent evt) {
+                        jpanel2.setBackground(new Color(255, 255, 255));
+                        inputFieldPassword.setBackground(new Color(255, 255, 255));
+                    }
+                });
+            } else {
+                inputFieldPassword.setFont(new Font("Lucida Sans Unicode", Font.BOLD, 14));
+                inputFieldPassword.setForeground(Color.BLACK);
+                inputFieldPassword.setEditable(!isEnable);
+                inputFieldPassword.setBackground(Color.white);
+            }
+            jpanel2.add(inputFieldPassword);
         }
-        
-        
+
         //PASSWORDLABEL
-        if(type == 1 )
-        {
+        if (type == 1) {
             JLabel iconPasswordLabel = new JLabel();
             iconPasswordLabel.setHorizontalAlignment(SwingConstants.CENTER);
             iconPasswordLabel.setIcon(PASSWORD_ICON);
             iconPasswordLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
             iconPasswordLabel.setFocusable(false);
             iconPasswordLabel.setHorizontalTextPosition(SwingConstants.CENTER);
-            sizeIconLabel = new Dimension((int) (sizeJpanel2.width*0.15),sizeJpanel2.height);
-            iconPasswordLabel.setLocation(sizeJpanel2.width-sizeIconLabel.width, 0);
+            sizeIconLabel = new Dimension((int) (sizeJpanel2.width * 0.15), sizeJpanel2.height);
+            iconPasswordLabel.setLocation(sizeJpanel2.width - sizeIconLabel.width, 0);
             iconPasswordLabel.setSize(sizeIconLabel);
             jpanel2.add(iconPasswordLabel);
-            Dimension newSizeText = new Dimension(sizeTextPassword.width-sizeIconLabel.width,sizeTextPassword.height);
+            Dimension newSizeText = new Dimension(sizeTextPassword.width - sizeIconLabel.width, sizeTextPassword.height);
             inputFieldPassword.setSize(newSizeText);
             iconPasswordLabel.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent evt) {
@@ -239,29 +278,29 @@ public class FieldSTM extends JPanel {
                     iconPasswordLabel.setIcon(PASSWORD_ICON);
                 }
             });
-        } 
-        
+        }
+
         //SELECTORFIELD
-        if(type == 2)
-        {
+        if (type == 2) {
             inputFieldSelector.setFont(new Font("Lucida Sans Unicode", 0, 14));
             inputFieldSelector.setForeground(new Color(120, 120, 120));
             inputFieldSelector.setEditable(false);
             inputFieldSelector.setBackground(Color.WHITE);
             inputFieldSelector.setText(text);
             inputFieldSelector.setBorder(null);
-            inputFieldSelector.setLocation(sizeIconLabel.width + (int) (sizeJpanel2.width*0.03),1);
-            Dimension sizeInputFieldSelector = new Dimension((int)(sizeJpanel2.width*0.94)-sizeIconLabel.width-25,sizeJpanel2.height-3);
+            inputFieldSelector.setLocation(sizeIconLabel.width + (int) (sizeJpanel2.width * 0.03), 1);
+            Dimension sizeInputFieldSelector = new Dimension((int) (sizeJpanel2.width * 0.94) - sizeIconLabel.width - 25, sizeJpanel2.height - 3);
             inputFieldSelector.setSize(sizeInputFieldSelector);
-            if(icon != null){
+            if (icon != null) {
                 inputFieldSelector.setFocusable(false);
             }
             inputFieldSelector.addFocusListener(new FocusListener() {
                 public void focusGained(FocusEvent evt) {
-                    alertState(true,false);
+                    alertState(true, false);
                 }
+
                 public void focusLost(FocusEvent evt) {
-                    alertState(false,false);
+                    alertState(false, false);
                 }
             });
             inputFieldSelector.addMouseListener(new MouseAdapter() {
@@ -269,88 +308,200 @@ public class FieldSTM extends JPanel {
                     jpanel2.setBackground(new Color(245, 245, 245));
                     inputFieldSelector.setBackground(new Color(245, 245, 245));
                 }
+
                 public void mouseExited(MouseEvent evt) {
                     jpanel2.setBackground(new Color(255, 255, 255));
                     inputFieldSelector.setBackground(new Color(255, 255, 255));
                 }
             });
-            jpanel2.add(inputFieldSelector); 
+            jpanel2.add(inputFieldSelector);
         }
-        
-        
+
         //SELECTORLABEL
-        if(type == 2)
-        {
+        if (type == 2) {
             JLabel iconSelectorLabel = new JLabel();
             iconSelectorLabel.setHorizontalAlignment(SwingConstants.CENTER);
             iconSelectorLabel.setIcon(ICON_SEARCH);
             iconSelectorLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
             iconSelectorLabel.setFocusable(false);
             iconSelectorLabel.setHorizontalTextPosition(SwingConstants.CENTER);
-            sizeIconLabel = new Dimension((int) (sizeJpanel2.width*0.15),sizeJpanel2.height);
-            iconSelectorLabel.setLocation(sizeJpanel2.width-sizeIconLabel.width, 0);
+            sizeIconLabel = new Dimension((int) (sizeJpanel2.width * 0.15), sizeJpanel2.height);
+            iconSelectorLabel.setLocation(sizeJpanel2.width - sizeIconLabel.width, 0);
             iconSelectorLabel.setSize(sizeIconLabel);
             jpanel2.add(iconSelectorLabel);
-            Dimension newSizeText = new Dimension(sizeTextPassword.width-sizeIconLabel.width,sizeTextPassword.height);
+            Dimension newSizeText = new Dimension(sizeTextPassword.width - sizeIconLabel.width, sizeTextPassword.height);
             inputFieldPassword.setSize(newSizeText);
             iconSelectorLabel.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent evt) {
-                    ClassSelector selector = new ClassSelector(classNameOrigin,classNameDestiny);
+                    ClassSelector selector = new ClassSelector(classNameOrigin, classNameDestiny);
                     selector.setVisible(true);
                 }
             });
-        }       
+        }
+
+        //Data FORMAT
+        if (type == 3) {
+            try
+            {
+            MaskFormatter formater = new MaskFormatter();
+            fieldData.setFont(new Font("Lucida Sans Unicode", 0, 14));
+            fieldData.setText(text);
+            fieldData.setBorder(null);
+            fieldData.setLocation(sizeIconLabel.width + (int) (sizeJpanel2.width * 0.03), 1);
+            Dimension sizeText = new Dimension((int) (sizeJpanel2.width * 0.94) - sizeIconLabel.width, sizeJpanel2.height - 3);
+            fieldData.setSize(sizeText);
+            formater.setMask("##/##/####");
+
+            fieldData.setForeground(new Color(120, 120, 120));
+            fieldData.addFocusListener(new FocusListener() {
+                public void focusGained(FocusEvent evt) {
+                    String textInputField = fieldData.getText();
+                    if (textInputField.equals(text)) {
+                        formater.install(fieldData);
+                    }
+
+                    alertState(true, false);
+                }
+
+                public void focusLost(FocusEvent evt) {
+                    String textInputField = fieldData.getText();
+                    if(textInputField.equals("  /  /    "))
+                    {
+                        formater.uninstall();
+                        fieldData.setText(text);
+                    }
+                    alertState(false, false);
+                }
+            });
+            fieldData.addMouseListener(new MouseAdapter() {
+                public void mouseEntered(MouseEvent evt) {
+                    jpanel2.setBackground(new Color(245, 245, 245));
+                    fieldData.setBackground(new Color(245, 245, 245));
+                }
+
+                public void mouseExited(MouseEvent evt) {
+                    jpanel2.setBackground(new Color(255, 255, 255));
+                    fieldData.setBackground(new Color(255, 255, 255));
+                }
+            });
+            
+            jpanel2.add(fieldData);
+            }
+            catch(Exception e)
+            {
+                System.out.println("[ERRO]");
+            }
+        }
+        
+        //BIG TEXT- PLACEHOLDER
+        if (type == 4) {
+            areaInputField.setFont(new Font("Lucida Sans Unicode", 0, 14));
+            areaInputField.setText(text);
+            areaInputField.setBorder(null);
+            areaInputField.setLocation(sizeIconLabel.width + (int) (sizeJpanel2.width * 0.03), 1);
+            Dimension sizeText = new Dimension((int) (sizeJpanel2.width * 0.94) - sizeIconLabel.width, sizeJpanel2.height - 3);
+            areaInputField.setSize(sizeText);
+            if (icon != null) {
+                areaInputField.setFocusable(false);
+            }
+            if (!isEnable) {
+                areaInputField.setForeground(new Color(120, 120, 120));
+                areaInputField.addFocusListener(new FocusListener() {
+                    public void focusGained(FocusEvent evt) {
+                        String textInputField = areaInputField.getText();
+                        if (textInputField.equals(text)) {
+                            areaInputField.setText("");
+                        }
+
+                        alertState(true, false);
+                    }
+
+                    public void focusLost(FocusEvent evt) {
+                        String textInputField = areaInputField.getText();
+                        if (textInputField.equals("")) {
+                            areaInputField.setText(text);
+                        }
+
+                        alertState(false, false);
+                    }
+                });
+                areaInputField.addMouseListener(new MouseAdapter() {
+                    public void mouseEntered(MouseEvent evt) {
+                        jpanel2.setBackground(new Color(245, 245, 245));
+                        areaInputField.setBackground(new Color(245, 245, 245));
+                    }
+
+                    public void mouseExited(MouseEvent evt) {
+                        jpanel2.setBackground(new Color(255, 255, 255));
+                        areaInputField.setBackground(new Color(255, 255, 255));
+                    }
+                });
+            } else {
+                areaInputField.setFont(new Font("Lucida Sans Unicode",0 , 14));
+                areaInputField.setForeground(Color.BLACK);
+                areaInputField.setEditable(!isEnable);
+                areaInputField.setBackground(Color.white);
+            }
+            jpanel2.add(areaInputField);
+        }        
 
         return this;
-   
+
     }
-    
-    public void alertState(boolean alert, boolean error){
-        if(alert){
-            jpanel3.setLocation(0,0);
+
+    public void alertState(boolean alert, boolean error) {
+
+        if (alert) {
+            jpanel3.setLocation(0, 0);
             jpanel3.setSize(Resolution.getInstance().getDimension(size));
-            if(error){
+            if (error) {
                 jpanel3.setBackground(Color.RED);
-            }
-            else{
+            } else {
                 jpanel3.setBackground(Color.BLUE);
             }
-        }  
-        else
-        {
+        } else {
             Point jpanel3location = Resolution.getInstance().getPointMarginX(size, 0.65);
             jpanel3.setLocation(jpanel3location);
-            Dimension jpanel3sub = new Dimension((jpanel3location.x*2),(jpanel3location.y*2));
+            Dimension jpanel3sub = new Dimension((jpanel3location.x * 2), (jpanel3location.y * 2));
             Dimension sizeJpanel3 = Resolution.getInstance().subtractDimension(size, jpanel3sub);
             jpanel3.setSize(sizeJpanel3);
             jpanel3.setBackground(Color.GRAY);
         }
     }
-    
-    public String getTextField(){
+
+    public String getTextField() {
         String text = "";
-        if(type == 0){
-           text = inputField.getText();
-        }else{
-            text = new String (inputFieldPassword.getPassword());
+        if (type == 0) {
+            text = inputField.getText();
+        } 
+        if(type == 1)
+        {
+            text = new String(inputFieldPassword.getPassword());
+        }
+        if(type == 3)
+        {
+            text = fieldData.getText();
+        }  
+        if(type == 4)
+        {
+            text = areaInputField.getText();
         }
         return text;
     }
-    
-    
-    public JTextField getField(){
-        if(type == 0){
+
+    public JTextField getField() {
+        if (type == 0) {
             return inputField;
         }
-        if(type == 1){
+        if (type == 1) {
             return inputFieldPassword;
         }
         return null;
     }
-    
-    public void setTextField(String text){
+
+    public void setTextField(String text) {
         inputField.setText(text);
         inputFieldSelector.setText(text);
-        
+
     }
 }

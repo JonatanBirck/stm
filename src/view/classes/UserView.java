@@ -25,7 +25,7 @@ import view.MainView;
 import view.components.ButtonSTM;
 import view.components.DialogSTM;
 import view.components.FieldSTM;
-import view.pages.CRUDView;
+import view.pages.MainPageView;
 
 public class UserView extends JFrame {
 
@@ -202,7 +202,7 @@ public class UserView extends JFrame {
             Validation validate = UserManager.getInstance().authenticateUpdate(user);
             if(validate.isValidated()){
                 UserManager.getInstance().updateUser(user);
-                JPanel jpanel = new CRUDView("user",MainView.getInstance().getSizeCRUD());
+                JPanel jpanel = new MainPageView("user",MainView.getInstance().getSizeCRUD());
                 MainView.getInstance().repaintPanels(jpanel);    
                 this.dispose();
             }
@@ -217,7 +217,7 @@ public class UserView extends JFrame {
             Validation validate = UserManager.getInstance().authenticateNewUser(user);
             if(validate.isValidated()){
                 UserManager.getInstance().addUser(user);
-                JPanel jpanel = new CRUDView("user",MainView.getInstance().getSizeCRUD());
+                JPanel jpanel = new MainPageView("user",MainView.getInstance().getSizeCRUD());
                 MainView.getInstance().repaintPanels(jpanel);  
                 this.dispose();
             }

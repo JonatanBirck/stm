@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import model.Task;
 import model.User;
@@ -12,6 +13,7 @@ import model.User;
 public class TaskDAO implements DAO<Task>{
 
     private static TaskDAO instance = null;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     public TaskDAO getInstance() {
         if (instance == null) {
@@ -26,8 +28,8 @@ public class TaskDAO implements DAO<Task>{
             Statement statement = ConnectionDB.getInstance().getConnection().createStatement();
                     
         
-            String sql = "INSERT INTO tasks (name,ref_user_created,description_create_task,ref_user_responsibility) VALUES "
-                    + "('" + task.getName() + "'," + task.getUserCreatedId() + ",'" + task.getDescriptionCreate() + "'," + task.getUserResponsibility() + ")";
+            String sql = "INSERT INTO tasks (name,ref_user_created,date_create,description_create_task,ref_user_responsibility) VALUES "
+                    + "('" + task.getName() + "'," + task.getUserCreatedId() + ",'" + task.getDateCreate() + "','" + task.getDescriptionCreate() + "'," + task.getUserResponsibility() + ")";
               
             statement.execute(sql);
             
@@ -60,34 +62,47 @@ public class TaskDAO implements DAO<Task>{
             if(task.getUserAnalyzeId() != 0){
                 ref_user_analyze = ", ref_user_analyze = " + task.getUserAnalyzeId();
             }
+
             if(task.getUserDoitId() != 0){
                 ref_user_doit = ", ref_user_doit = " + task.getUserDoitId();
             }
+
             if(task.getUserCheckId() != 0){
                 ref_user_check = ", ref_user_check = " + task.getUserCheckId();
             }
+
             if(task.getDateAnalyze() != null){
-                date_analyze = ", date_analyze = " + task.getDateAnalyze().toString();
+                String dataAnalyze = "'" + dateFormat.format(task.getDateAnalyze()) + "'";
+                date_analyze = ", date_analyze = " + dataAnalyze;
             }
+
             if(task.getDateDoit() != null){
-                date_doit = ", date_doit = " + task.getDateDoit().toString();
+                String dateDoit = "'" + dateFormat.format(task.getDateDoit()) + "'";
+                date_doit = ", date_doit = " + dateDoit;
             }
+
             if(task.getDateCheck() != null){
-                date_check = ", date_check = " + task.getDateCheck().toString();
-            }     
-            if(task.getDescriptionAnalyze().equals(" ")){
-                description_analyze_task = ", description_analyze_task = '" + task.getDescriptionAnalyze() + "'";
-            }
-            if(task.getDescriptionDoit().equals(" ")){
-                description_doit_task = ", description_doit_task = '" + task.getDescriptionDoit() + "'";
-            } 
-            if(task.getDescriptionCheck().equals(" ")){
-                description_check_task = ", description_check_task = '" + task.getDescriptionCheck() + "'";
-            }
-            if(task.getUserResponsibility() != 0){
-                ref_user_responsibility = ", ref_user_responsibility = " + task.getUserResponsibility();
+                String dateCheck = "'" + dateFormat.format(task.getDateCheck()) + "'";
+                date_check = ", date_check = " + dateCheck;
             }
             
+            if(task.getDescriptionAnalyze() != null){
+                description_analyze_task = ", description_analyze_task = '" + task.getDescriptionAnalyze() + "'";
+            }
+
+            if(task.getDescriptionDoit() != null){
+                description_doit_task = ", description_doit_task = '" + task.getDescriptionDoit() + "'";
+            } 
+
+            if(task.getDescriptionCheck() != null)
+            {
+                description_check_task = ", description_check_task = '" + task.getDescriptionCheck() + "'";
+            }
+
+            if(task.getUserResponsibility() != 0)
+            {
+                ref_user_responsibility = ", ref_user_responsibility = " + task.getUserResponsibility();
+            }
             
             StringBuilder sql = new StringBuilder();
             
@@ -114,7 +129,7 @@ public class TaskDAO implements DAO<Task>{
             return true;
 
         } catch (Exception e) {
-            System.out.println("FAIL - UPDATE TASK: " + task.getName() + " ERRO: " + e );
+            System.out.println("FAIL - UPDATE TASK: " + task.getName() + " ERRO: " + e);
             return false;
         }
     }

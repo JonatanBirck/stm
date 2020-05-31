@@ -13,9 +13,9 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import view.components.ButtonSTM;
 import view.components.OptionMenuSTM;
-import view.pages.CRUDView;;
+import view.pages.MainPageView;
+;
 
 public class MainView extends JFrame {
     
@@ -31,6 +31,7 @@ public class MainView extends JFrame {
     private final JLabel reportsLabel = new JLabel("Task Manager");
     private final JLabel configLabel = new JLabel("Configurações");
     private final JLayeredPane pages = new JLayeredPane();
+    private int lastStagePage;
     private Point sizeCRUD;
     
     
@@ -114,21 +115,18 @@ public class MainView extends JFrame {
         menuPanel.add(myTaskLabel);
         
         sizeCRUD = new Point(SIZEFRAME.x-menuPanelSize.x,SIZEFRAME.y);
-           
-        JPanel teste1 = new ButtonSTM().getButtonSTM("EM MANUTENÇÃO",0,1,Color.GRAY, new Point(500,500));        
-
-
+        
         //OptionsMyTask
         Point sizeOption = new Point(menuPanelSize.x,(int)(menuPanelSize.x*0.13));
-        OptionMenuSTM option1 = new OptionMenuSTM("Todas",sizeOption,new CRUDView("task",1,sizeCRUD));
+        OptionMenuSTM option1 = new OptionMenuSTM("Todas",sizeOption,new MainPageView("task",1,sizeCRUD),true);
         option1.setLocation(0,functionUserLocation.y+70);
         menuPanel.add(option1);  
         
-        OptionMenuSTM option2 = new OptionMenuSTM("Em Processo",sizeOption,new CRUDView("task",2,sizeCRUD));
+        OptionMenuSTM option2 = new OptionMenuSTM("Em Processo",sizeOption,new MainPageView("task",2,sizeCRUD),true);
         option2.setLocation(0,functionUserLocation.y+70+sizeOption.y);
         menuPanel.add(option2);  
         
-        OptionMenuSTM option3 = new OptionMenuSTM("Concluidas",sizeOption,new CRUDView("task",3,sizeCRUD));
+        OptionMenuSTM option3 = new OptionMenuSTM("Concluidas",sizeOption,new MainPageView("task",3,sizeCRUD),true);
         Point sizeOptions3Location = new Point(0,functionUserLocation.y+70+sizeOption.y+sizeOption.y);
         option3.setLocation(sizeOptions3Location);
         menuPanel.add(option3);  
@@ -144,11 +142,11 @@ public class MainView extends JFrame {
         menuPanel.add(reportsLabel);        
         
         //OptionsReportsLabel
-        OptionMenuSTM option4 = new OptionMenuSTM("Relatórios",sizeOption,teste1);
+        OptionMenuSTM option4 = new OptionMenuSTM("Relatórios",sizeOption,new MainPageView("report",sizeCRUD));
         option4.setLocation(0,reportsLabelLocation.y+25);
         menuPanel.add(option4);  
         
-        OptionMenuSTM option5 = new OptionMenuSTM("Consultar Tarefas",sizeOption,new CRUDView("task",0,sizeCRUD));
+        OptionMenuSTM option5 = new OptionMenuSTM("Consultar Tarefas",sizeOption,new MainPageView("task",0,sizeCRUD),true);
         option5.setLocation(0,reportsLabelLocation.y+25+sizeOption.y);
         menuPanel.add(option5);
         
@@ -163,19 +161,19 @@ public class MainView extends JFrame {
         menuPanel.add(configLabel);   
         
         //OptionsReportsLabel
-        OptionMenuSTM option6 = new OptionMenuSTM("Usuários",sizeOption,new CRUDView("user",sizeCRUD));
+        OptionMenuSTM option6 = new OptionMenuSTM("Usuários",sizeOption,new MainPageView("user",sizeCRUD),true);
         option6.setLocation(0,configLabelLocation.y+25);
         menuPanel.add(option6); 
         
-        OptionMenuSTM option7 = new OptionMenuSTM("Departamentos",sizeOption,new CRUDView("department",sizeCRUD));
+        OptionMenuSTM option7 = new OptionMenuSTM("Departamentos",sizeOption,new MainPageView("department",sizeCRUD),true);
         option7.setLocation(0,configLabelLocation.y+25+sizeOption.y);
         menuPanel.add(option7);
         
-        OptionMenuSTM option8 = new OptionMenuSTM("Setores",sizeOption,new CRUDView("sector",sizeCRUD));
+        OptionMenuSTM option8 = new OptionMenuSTM("Setores",sizeOption,new MainPageView("sector",sizeCRUD),true);
         option8.setLocation(0,configLabelLocation.y+25+sizeOption.y+sizeOption.y);
         menuPanel.add(option8);  
         
-        OptionMenuSTM option9 = new OptionMenuSTM("Funções",sizeOption,new CRUDView("function",sizeCRUD));
+        OptionMenuSTM option9 = new OptionMenuSTM("Funções",sizeOption,new MainPageView("function",sizeCRUD),true);
         option9.setLocation(0,configLabelLocation.y+25+sizeOption.y+sizeOption.y+sizeOption.y);
         menuPanel.add(option9); 
         
@@ -196,6 +194,14 @@ public class MainView extends JFrame {
         pages.revalidate();
     }
     
+    public void switchPanelsCrud(MainPageView panelcrud) {
+        pages.removeAll();
+        this.lastStagePage = panelcrud.getStageTask();
+        pages.add(panelcrud);
+        pages.repaint();
+        pages.revalidate();
+    }    
+    
     public static void repaintPanels(JPanel jpanel){
         
         MainView.getInstance().pages.removeAll();
@@ -207,4 +213,9 @@ public class MainView extends JFrame {
     public Point getSizeCRUD(){
         return this.sizeCRUD;
     }
+    
+    public int getLastStagePage(){
+        return this.lastStagePage;
+    }
+       
 }

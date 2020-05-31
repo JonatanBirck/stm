@@ -25,7 +25,7 @@ import view.MainView;
 import view.components.ButtonSTM;
 import view.components.DialogSTM;
 import view.components.FieldSTM;
-import view.pages.CRUDView;
+import view.pages.MainPageView;
 
 public class FunctionView extends JFrame {
 
@@ -185,7 +185,7 @@ public class FunctionView extends JFrame {
             Validation validate = FunctionManager.getInstance().authenticateUpdate(function);
             if(validate.isValidated()){
                 FunctionManager.getInstance().updateFunction(function);
-                JPanel jpanel = new CRUDView("function",MainView.getInstance().getSizeCRUD());
+                JPanel jpanel = new MainPageView("function",MainView.getInstance().getSizeCRUD());
                 MainView.getInstance().repaintPanels(jpanel);    
                 this.dispose();
             }
@@ -200,7 +200,7 @@ public class FunctionView extends JFrame {
             Validation validate = FunctionManager.getInstance().authenticateNew(function);
             if(validate.isValidated()){
                 FunctionManager.getInstance().addFunction(function);
-                JPanel jpanel = new CRUDView("function",MainView.getInstance().getSizeCRUD());
+                JPanel jpanel = new MainPageView("function",MainView.getInstance().getSizeCRUD());
                 MainView.getInstance().repaintPanels(jpanel);  
                 this.dispose();
             }

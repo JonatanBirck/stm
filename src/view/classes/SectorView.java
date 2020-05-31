@@ -27,7 +27,7 @@ import view.MainView;
 import view.components.ButtonSTM;
 import view.components.DialogSTM;
 import view.components.FieldSTM;
-import view.pages.CRUDView;
+import view.pages.MainPageView;
 
 public class SectorView extends JFrame {
 
@@ -203,7 +203,7 @@ public class SectorView extends JFrame {
             Validation validate = SectorManager.getInstance().authenticateUpdate(sector);
             if(validate.isValidated()){
                 SectorManager.getInstance().updateSector(sector);
-                JPanel jpanel = new CRUDView("sector",MainView.getInstance().getSizeCRUD());
+                JPanel jpanel = new MainPageView("sector",MainView.getInstance().getSizeCRUD());
                 MainView.getInstance().repaintPanels(jpanel);    
                 this.dispose();
             }
@@ -218,7 +218,7 @@ public class SectorView extends JFrame {
             Validation validate = SectorManager.getInstance().authenticateNew(sector);
             if(validate.isValidated()){
                 SectorManager.getInstance().addSector(sector);
-                JPanel jpanel = new CRUDView("user",MainView.getInstance().getSizeCRUD());
+                JPanel jpanel = new MainPageView("user",MainView.getInstance().getSizeCRUD());
                 MainView.getInstance().repaintPanels(jpanel);  
                 this.dispose();
             }

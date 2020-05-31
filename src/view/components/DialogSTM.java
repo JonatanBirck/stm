@@ -16,7 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import view.MainView;
-import view.pages.CRUDView;
+import view.pages.MainPageView;
 
 public class DialogSTM extends JFrame {
     /*
@@ -127,7 +127,7 @@ public class DialogSTM extends JFrame {
                     try {
                         methods[0].invoke(null,objects[0]);
                         methods[1].invoke(null);
-                        JPanel jpanel = new CRUDView((String) objects[1],MainView.getInstance().getSizeCRUD());
+                        JPanel jpanel = new MainPageView((String) objects[1],MainView.getInstance().getSizeCRUD());
                         methods[2].invoke(null,jpanel);
                     } catch (Exception ex) {
                         System.out.println("ERRO: " + ex);;

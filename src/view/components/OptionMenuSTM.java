@@ -14,19 +14,30 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import view.MainView;
+import view.pages.MainPageView;
 
 public class OptionMenuSTM extends JPanel {
 
     private final String text;
+    private boolean isCrud;
 
     private final JPanel jpanel1 = new JPanel();
     private final JPanel jpanel2 = new JPanel();
     private final JLabel jlabel1 = new JLabel();
+    private final JPanel jpanel = new JPanel();
+    private MainPageView jpanelCrud = null;
 
     public OptionMenuSTM(String placeHolder, Point size, JPanel jpanel){
         this.text = placeHolder;
         createPanel(placeHolder,size,jpanel);
     }
+    
+    public OptionMenuSTM(String placeHolder, Point size, MainPageView jpanelCrud, boolean isCrud){
+        this.text = placeHolder;
+        this.isCrud = isCrud;
+        this.jpanelCrud = jpanelCrud;
+        createPanel(placeHolder,size,jpanel);
+    }    
 
     private void createPanel(String placeHolder, Point size, JPanel jpanel){
 
@@ -67,8 +78,16 @@ public class OptionMenuSTM extends JPanel {
         }
         public void mouseClicked(MouseEvent evt) {
             jpanel2.requestFocus();
-            MainView.getInstance().repaint();
-            MainView.getInstance().switchPanels(jpanel);
+            if(isCrud)
+            {
+                MainPageView jpanelCrudNew = new MainPageView(jpanelCrud.getObject(),jpanelCrud.getStageTask(),jpanelCrud.getSizeCrud());
+                        
+                MainView.getInstance().switchPanelsCrud(jpanelCrudNew); 
+            }
+            else
+            {
+               MainView.getInstance().switchPanels(jpanel); 
+            }
         }});    
         jpanel2.addFocusListener(new FocusListener() {    
             public void focusGained(FocusEvent evt) {

@@ -25,7 +25,7 @@ import view.MainView;
 import view.components.ButtonSTM;
 import view.components.DialogSTM;
 import view.components.FieldSTM;
-import view.pages.CRUDView;
+import view.pages.MainPageView;
 
 public class DepartmentView extends JFrame {
 
@@ -185,7 +185,7 @@ public class DepartmentView extends JFrame {
             Validation validate = DepartmentManager.getInstance().authenticateUpdate(department);
             if(validate.isValidated()){
                 DepartmentManager.getInstance().updateDepartment(department);
-                JPanel jpanel = new CRUDView("department",MainView.getInstance().getSizeCRUD());
+                JPanel jpanel = new MainPageView("department",MainView.getInstance().getSizeCRUD());
                 MainView.getInstance().repaintPanels(jpanel);    
                 this.dispose();
             }
@@ -200,7 +200,7 @@ public class DepartmentView extends JFrame {
             Validation validate = DepartmentManager.getInstance().authenticateNew(department);
             if(validate.isValidated()){
                 DepartmentManager.getInstance().addDepartment(department);
-                JPanel jpanel = new CRUDView("department",MainView.getInstance().getSizeCRUD());
+                JPanel jpanel = new MainPageView("department",MainView.getInstance().getSizeCRUD());
                 MainView.getInstance().repaintPanels(jpanel);  
                 this.dispose();
             }
