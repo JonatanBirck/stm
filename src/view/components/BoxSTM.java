@@ -88,6 +88,11 @@ public class BoxSTM extends JPanel {
 
         createNewBox(size);
     }
+    
+    public String getClassObject()
+    {
+        return this.classObject;
+    }
 
     private JPanel createNewBox(Point size) {
 
@@ -139,6 +144,11 @@ public class BoxSTM extends JPanel {
         jpanel1.add(jlabel1);
 
         return this;
+    }
+    
+    public String getTitle()
+    {
+        return this.title;
     }
 
     private JPanel createBox(Point size) {

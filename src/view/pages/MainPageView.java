@@ -10,6 +10,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.text.SimpleDateFormat;
@@ -23,6 +25,7 @@ import model.Function;
 import model.Sector;
 import model.Task;
 import model.User;
+import view.MainView;
 import view.components.BoxSTM;
 import view.components.FieldSTM;
 import view.components.RoundedPanel;
@@ -35,8 +38,18 @@ public class MainPageView extends JPanel {
     private final JPanel jpanel5 = new JPanel();
     private final JPanel jpanel6 = new RoundedPanel(10);
     private final JPanel jpanel7 = new RoundedPanel(10);
+    private Dimension sizePainel1 = null;
+    private Dimension sizePainel2 = null;
+    private Dimension sizePainel3 = null;
+    private Dimension sizePainel4 = null;
+    private Dimension sizePainel5 = null;
+    private Dimension sizePainel6 = null;
+    private Dimension sizePainel7 = null;
+    private Dimension sizePainel8 = null;
+    private Dimension sizePainel9 = null;
     private FieldSTM searchPanel = new FieldSTM();
-    private final ArrayList<JPanel> jpanelBoxes = new ArrayList();
+    private ArrayList<BoxSTM> jpanelBoxes = new ArrayList();
+    private ArrayList<BoxSTM> hiddenJpanelBoxes = new ArrayList();
     
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     
@@ -66,6 +79,14 @@ public class MainPageView extends JPanel {
         this.size = size;
         initComponents();
     } 
+    
+    public MainPageView(String object, int stageTask, Point size, ArrayList<BoxSTM> boxes){
+        this.object = object;
+        this.stageTask = stageTask;
+        this.size = size;
+        this.jpanelBoxes = boxes;
+        initComponents();
+    }     
 
     public int getStageTask() {
         return stageTask;
@@ -135,7 +156,7 @@ public class MainPageView extends JPanel {
         //PAINEL BODY
         jpanel1.setBackground(new Color(200,200,200));
         jpanel1.setLocation(0,(int)(size.x*0.06));
-        Dimension sizePainel1 = new Dimension((int)(size.x*0.98),(int)(size.y*0.86));
+        sizePainel1 = new Dimension((int)(size.x*0.98),(int)(size.y*0.86));
         jpanel1.setSize(sizePainel1);
         jpanel1.setLayout(null);
         this.add(jpanel1);
@@ -143,7 +164,7 @@ public class MainPageView extends JPanel {
         //CONTEUDO
         jpanel4.setBackground(new Color(200,200,200));
         jpanel4.setLocation((int)(size.x*0.03),0);
-        Dimension sizePainel4 = new Dimension(sizePainel1.width,sizePainel1.height);
+        sizePainel4 = new Dimension(sizePainel1.width,sizePainel1.height);
         jpanel4.setSize(sizePainel4);
         jpanel4.setLayout(null);
         jpanel1.add(jpanel4);
@@ -151,7 +172,7 @@ public class MainPageView extends JPanel {
         //BAR RIGHT
         jpanel5.setLocation(sizePainel1.width,(int)(size.x*0.06));
         jpanel5.setBackground(new Color(200,200,200));
-        Dimension sizePainel5 = new Dimension(Resolution.getInstance().subtractDimension(size, sizePainel1).width,(int)(size.y*0.80));
+        sizePainel5 = new Dimension(Resolution.getInstance().subtractDimension(size, sizePainel1).width,(int)(size.y*0.80));
         jpanel5.setSize(sizePainel5);
         jpanel5.setLayout(null);
         this.add(jpanel5);
@@ -159,7 +180,7 @@ public class MainPageView extends JPanel {
         jpanel6.setBackground(new Color(210,210,230));
         jpanel6.setOpaque(false);
         jpanel6.setLocation(0,0);
-        Dimension sizePainel6 = new Dimension((int)(sizePainel5.width/2),sizePainel5.height);
+        sizePainel6 = new Dimension((int)(sizePainel5.width/2),sizePainel5.height);
         jpanel6.setSize(sizePainel6);
         jpanel6.setLayout(null);
         jpanel5.add(jpanel6);
@@ -167,7 +188,7 @@ public class MainPageView extends JPanel {
         jpanel7.setBackground(Color.BLUE);
         jpanel7.setOpaque(false);
         jpanel7.setLocation(0,0);
-        Dimension sizePainel7 = new Dimension(sizePainel6.width,sizePainel5.height);
+        sizePainel7 = new Dimension(sizePainel6.width,sizePainel5.height);
         jpanel7.setSize(sizePainel7);
         jpanel7.setLayout(null);
         jpanel6.add(jpanel7);    
@@ -175,101 +196,185 @@ public class MainPageView extends JPanel {
         //PAINEL TOP
         jpanel2.setLocation(0,0);
         jpanel2.setBackground(new Color(200,200,200));
-        Dimension sizePainel2 = new Dimension(size.x,(int)(size.x*0.06));
+        sizePainel2 = new Dimension(size.x,(int)(size.x*0.06));
         jpanel2.setSize(sizePainel2);
         jpanel2.setLayout(null);
         this.add(jpanel2);
+        
+        if(jpanelBoxes.isEmpty())
+        {
+            jpanelBoxes = loadDate(); 
+        }
         
         Point searchSize = new Point((int)(size.x*0.25),(int)(size.x*0.03)); 
         searchPanel = new FieldSTM("Buscar", searchSize);
         searchPanel.setLocation(size.x-searchSize.x-50, (int)(size.x*0.02));
         jpanel2.add(searchPanel);
+        
+        searchPanel.getField().addKeyListener(new KeyListener(){
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode()==KeyEvent.VK_ENTER)
+                {
+                    System.out.println("2");
+                    change();
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+            
+            public void change()
+            {
                 
-        //LOAD DATA OF CRUD
-        switch(object){
-            case "user" : 
-                ArrayList<User> users = UserManager.getInstance().getUsers();
-                for(User user : users)
+                jpanelBoxes.clear();
+                jpanelBoxes = loadDate();
+                
+                String textInput = searchPanel.getTextField().toLowerCase();                
+                
+                for (BoxSTM jpanelBox : jpanelBoxes)
                 {
-                    jpanelBoxes.add(new BoxSTM(user.getId(),"user","Usuário",user.getName(),FunctionManager.getInstance().getFunction(user.getFunctionId()).getName(), Color.BLUE,new Point(250,250)));
-                }
-                jpanelBoxes.add(new BoxSTM(0,"user",true, new Point(250,250)));
-                break;
-            case "department" : 
-                ArrayList<Department> departments = DepartmentManager.getInstance().getDepartments();
-                for(Department department : departments)
-                {
-                    jpanelBoxes.add(new BoxSTM(department.getId(),"department","Departamento",department.getName(),UserManager.getInstance().getUser(department.getManagerId()).getName(), Color.BLUE,new Point(250,250)));
-                }
-                jpanelBoxes.add(new BoxSTM(0,"department",true, new Point(250,250)));
-                break;
-            case "function" : 
-                ArrayList<Function> functions = FunctionManager.getInstance().getFunctions();
-                for(Function function : functions)
-                {
-                    jpanelBoxes.add(new BoxSTM(function.getId(),"function","Funções",function.getName(),SectorManager.getInstance().getSector(function.getSectorId()).getName(), Color.BLUE,new Point(250,250)));
-                }
-                jpanelBoxes.add(new BoxSTM(0,"function",true, new Point(250,250)));
-                break;
-            case "sector" : 
-                ArrayList<Sector> sectors = SectorManager.getInstance().getSectors();
-                for(Sector sector : sectors)
-                {
-                    jpanelBoxes.add(new BoxSTM(sector.getId(),"sector","Setores",sector.getName(),DepartmentManager.getInstance().getDepartment(sector.getDepartmentId()).getName(), Color.BLUE,new Point(250,250)));
-                }
-                jpanelBoxes.add(new BoxSTM(0,"sector",true, new Point(250,250)));
-                break;
-            case "task" : 
-                ArrayList<Task> tasks = new ArrayList();
-                switch(stageTask)
-                {
-                    case 0 :
-                        tasks = TaskManager.getInstance().getTasks();
-                        for(Task task : tasks)
-                        {
-                            String state = "";
-                            Color stateColor = Color.BLUE;
-                            switch(task.getState()){
-                                case -1 : 
-                                    state = "Cancelada";
-                                    stateColor = Color.RED;
-                                    break;
-                                case 0 : 
-                                    state = "Criada";
-                                    stateColor = Color.ORANGE;
-                                    break;
-                                case 1 : 
-                                    state = "Em Análise";
-                                    stateColor = Color.GRAY;
-                                    break;
-                                case 2 : 
-                                    state = "Em Execução";
-                                    stateColor = Color.BLUE;
-                                    break;
-                                case 3 : 
-                                    state = "EM Verificação";
-                                    stateColor = Color.YELLOW;
-                                    break;     
-                                case 4 : 
-                                    state = "Concluída";
-                                    stateColor = Color.GREEN;
-                                    break;                               
-                            }
-                            jpanelBoxes.add(new BoxSTM(task.getId(),"task",state,task.getName(),dateFormat.format(task.getDateCreate()),stateColor,new Point(250,250)));
-                        }
-                        jpanelBoxes.add(new BoxSTM(0,"task",true, new Point(250,250)));
-                        break;
+                    String title = jpanelBox.getTitle().toLowerCase();
                     
-                    case 1 :
-                        tasks = TaskManager.getInstance().getTasksByUser(UserManager.getInstance().getUserLogged());
-                        for(Task task : tasks)
-                        {
-                            if(task.getState() != -1 && task.getState() != 4 )
+                    if(title.contains(textInput))
+                    {
+                        hiddenJpanelBoxes.add(jpanelBox);
+                    }
+                }   
+                jpanelBoxes.clear();
+                jpanelBoxes = hiddenJpanelBoxes;
+                
+                MainPageView jpanelCrudNew = new MainPageView(getObjectS(),getStageTask(),getSizeCrud(),jpanelBoxes);
+
+                MainView.getInstance().switchPanelsCrud(jpanelCrudNew); 
+                
+                jpanelCrudNew.searchPanel.setTextField(textInput);
+               
+            }
+        });   
+        
+        repaintBoxes();
+                       
+    } 
+    
+    private String getObjectS()
+    {
+        return this.object;
+    }
+    
+    
+        private void repaintBoxes()
+        {
+            //PAINT CRUD
+            int rowBoxes = 0;
+            int columnBoxes = 0;
+            for(BoxSTM jpanelBox : jpanelBoxes)
+            {
+                if( rowBoxes == 4 )
+                {
+                    rowBoxes = 0;
+                    jpanel4.setSize((int) sizePainel4.getWidth(), (int) (sizePainel4.getHeight()+jpanelBox.getSize().height*columnBoxes));                
+                    jpanel4.repaint();
+                    columnBoxes++;
+                } 
+
+                Point boxLocation = new Point(rowBoxes*jpanelBox.getSize().width,columnBoxes*jpanelBox.getSize().height);
+                jpanelBox.setLocation(boxLocation);
+                jpanelBox.setOpaque(false);
+                jpanelBox.setLayout(null);
+                jpanel4.add(jpanelBox);
+
+                rowBoxes++;
+
+                //bar
+                if(columnBoxes > 2){
+                    int norY = (int) sizePainel1.getHeight();
+                    int maxY = (int) (sizePainel4.getHeight()+jpanelBox.getSize().height*columnBoxes);
+                    int porcentSize = (int)((norY*100)/maxY);
+                    int sizeBar = (int)((norY*porcentSize)/100);
+                    sizePainel7 = new Dimension(sizePainel6.width,sizeBar);
+                    jpanel7.setSize(sizePainel7);     
+                    jpanel7.repaint();
+                }
+
+            }
+            if(jpanelBoxes.isEmpty())
+            {
+                JLabel alldone = new JLabel();
+                alldone.setIcon(ICONALLDONE);
+                alldone.setLocation(0, 0);
+                alldone.setHorizontalAlignment(SwingConstants.CENTER);
+                alldone.setSize(sizePainel1.width,(int) (sizePainel1.height*0.9));
+                jpanel4.add(alldone);
+
+                JLabel alldone2 = new JLabel("Tudo Pronto!");
+                alldone2.setFont(new Font("Lucida Sans Unicode", 1, 38)); 
+                alldone2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+                alldone2.setLocation(0, 510);
+                alldone2.setSize(sizePainel1.width,50);
+                jpanel4.add(alldone2);
+            }
+        }
+    
+    
+        private ArrayList<BoxSTM> loadDate()
+        {
+            //LOAD DATA OF CRUD
+            switch(object){
+                case "user" : 
+                    ArrayList<User> users = UserManager.getInstance().getUsers();
+                    for(User user : users)
+                    {
+                        jpanelBoxes.add(new BoxSTM(user.getId(),"user","Usuário",user.getName(),FunctionManager.getInstance().getFunction(user.getFunctionId()).getName(), Color.BLUE,new Point(250,250)));
+                    }
+                    jpanelBoxes.add(new BoxSTM(0,"user",true, new Point(250,250)));
+                    break;
+                case "department" : 
+                    ArrayList<Department> departments = DepartmentManager.getInstance().getDepartments();
+                    for(Department department : departments)
+                    {
+                        jpanelBoxes.add(new BoxSTM(department.getId(),"department","Departamento",department.getName(),UserManager.getInstance().getUser(department.getManagerId()).getName(), Color.BLUE,new Point(250,250)));
+                    }
+                    jpanelBoxes.add(new BoxSTM(0,"department",true, new Point(250,250)));
+                    break;
+                case "function" : 
+                    ArrayList<Function> functions = FunctionManager.getInstance().getFunctions();
+                    for(Function function : functions)
+                    {
+                        jpanelBoxes.add(new BoxSTM(function.getId(),"function","Funções",function.getName(),SectorManager.getInstance().getSector(function.getSectorId()).getName(), Color.BLUE,new Point(250,250)));
+                    }
+                    jpanelBoxes.add(new BoxSTM(0,"function",true, new Point(250,250)));
+                    break;
+                case "sector" : 
+                    ArrayList<Sector> sectors = SectorManager.getInstance().getSectors();
+                    for(Sector sector : sectors)
+                    {
+                        jpanelBoxes.add(new BoxSTM(sector.getId(),"sector","Setores",sector.getName(),DepartmentManager.getInstance().getDepartment(sector.getDepartmentId()).getName(), Color.BLUE,new Point(250,250)));
+                    }
+                    jpanelBoxes.add(new BoxSTM(0,"sector",true, new Point(250,250)));
+                    break;
+                case "task" : 
+                    ArrayList<Task> tasks = new ArrayList();
+                    switch(stageTask)
+                    {
+                        case 0 :
+                            tasks = TaskManager.getInstance().getTasks();
+                            for(Task task : tasks)
                             {
                                 String state = "";
                                 Color stateColor = Color.BLUE;
                                 switch(task.getState()){
-
+                                    case -1 : 
+                                        state = "Cancelada";
+                                        stateColor = Color.RED;
+                                        break;
                                     case 0 : 
                                         state = "Criada";
                                         stateColor = Color.ORANGE;
@@ -285,146 +390,134 @@ public class MainPageView extends JPanel {
                                     case 3 : 
                                         state = "EM Verificação";
                                         stateColor = Color.YELLOW;
-                                        break;                                 
+                                        break;     
+                                    case 4 : 
+                                        state = "Concluída";
+                                        stateColor = Color.GREEN;
+                                        break;                               
                                 }
-                                jpanelBoxes.add(new BoxSTM(task.getId(),"task",state,task.getName(),dateFormat.format(task.getDateCreate()),stateColor,new Point(250,250)));  
+                                jpanelBoxes.add(new BoxSTM(task.getId(),"task",state,task.getName(),dateFormat.format(task.getDateCreate()),stateColor,new Point(250,250)));
                             }
-                        }
-                        break;
-                    case 2 :
-                        tasks = TaskManager.getInstance().getTasksByUserAndState(UserManager.getInstance().getUserLogged(),2);
-                        for(Task task : tasks)
-                        {
-                            String state = "";
-                            Color stateColor = Color.BLUE;
-                            switch(task.getState()){
-                                case -1 : 
-                                    state = "Cancelada";
-                                    stateColor = Color.RED;
-                                    break;
-                                case 0 : 
-                                    state = "Criada";
-                                    stateColor = Color.ORANGE;
-                                    break;
-                                case 1 : 
-                                    state = "Em Análise";
-                                    stateColor = Color.GRAY;
-                                    break;
-                                case 2 : 
-                                    state = "Em Execução";
-                                    stateColor = Color.BLUE;
-                                    break;
-                                case 3 : 
-                                    state = "EM Verificação";
-                                    stateColor = Color.YELLOW;
-                                    break;     
-                                case 4 : 
-                                    state = "Concluída";
-                                    stateColor = Color.GREEN;
-                                    break;                               
-                            }
-                            jpanelBoxes.add(new BoxSTM(task.getId(),"task",state,task.getName(),dateFormat.format(task.getDateCreate()),stateColor,new Point(250,250)));
-                        }                        
-                        break;
-                    case 3 :
-                        tasks = TaskManager.getInstance().getTasksByUserAndState(UserManager.getInstance().getUserLogged(),4);
-                        for(Task task : tasks)
-                        {
-                            String state = "";
-                            Color stateColor = Color.BLUE;
-                            switch(task.getState()){
-                                case -1 : 
-                                    state = "Cancelada";
-                                    stateColor = Color.RED;
-                                    break;
-                                case 0 : 
-                                    state = "Criada";
-                                    stateColor = Color.ORANGE;
-                                    break;
-                                case 1 : 
-                                    state = "Em Análise";
-                                    stateColor = Color.GRAY;
-                                    break;
-                                case 2 : 
-                                    state = "Em Execução";
-                                    stateColor = Color.BLUE;
-                                    break;
-                                case 3 : 
-                                    state = "EM Verificação";
-                                    stateColor = Color.YELLOW;
-                                    break;     
-                                case 4 : 
-                                    state = "Concluída";
-                                    stateColor = Color.GREEN;
-                                    break;                               
-                            }
-                            jpanelBoxes.add(new BoxSTM(task.getId(),"task",state,task.getName(),dateFormat.format(task.getDateCreate()),stateColor,new Point(250,250)));
-                        }                           
-                        break;
-                }
-                break;  
-            case "report" :
-                jpanelBoxes.add(new BoxSTM(1,"report","Relátorio","Usuários por Departamento","v1.0",Color.BLUE,new Point(250,250)));
-                jpanelBoxes.add(new BoxSTM(2,"report","Relátorio","Vinculos por Usuário","v1.0",Color.BLUE,new Point(250,250)));
-                jpanelBoxes.add(new BoxSTM(3,"report","Relátorio","Tarefas por Responsavel","v1.0",Color.BLUE,new Point(250,250)));
-                jpanelBoxes.add(new BoxSTM(4,"report","Relátorio","Situação das Tarefas por Estado","v1.0",Color.BLUE,new Point(250,250)));
-                break;
-        }
-        
-        //PAINT CRUD
-        int rowBoxes = 0;
-        int columnBoxes = 0;
-        for(JPanel jpanelBox : jpanelBoxes)
-        {
-            if( rowBoxes == 4 )
-            {
-                rowBoxes = 0;
-                jpanel4.setSize((int) sizePainel4.getWidth(), (int) (sizePainel4.getHeight()+jpanelBox.getSize().height*columnBoxes));                
-                jpanel4.repaint();
-                columnBoxes++;
-            } 
-            
-            Point boxLocation = new Point(rowBoxes*jpanelBox.getSize().width,columnBoxes*jpanelBox.getSize().height);
-            jpanelBox.setLocation(boxLocation);
-            jpanelBox.setOpaque(false);
-            jpanelBox.setLayout(null);
-            jpanel4.add(jpanelBox);
+                            jpanelBoxes.add(new BoxSTM(0,"task",true, new Point(250,250)));
+                            break;
 
-            rowBoxes++;
+                        case 1 :
+                            tasks = TaskManager.getInstance().getTasksByUser(UserManager.getInstance().getUserLogged());
+                            for(Task task : tasks)
+                            {
+                                if(task.getState() != -1 && task.getState() != 4 )
+                                {
+                                    String state = "";
+                                    Color stateColor = Color.BLUE;
+                                    switch(task.getState()){
 
-            //bar
-            if(columnBoxes > 2){
-                int norY = (int) sizePainel1.getHeight();
-                int maxY = (int) (sizePainel4.getHeight()+jpanelBox.getSize().height*columnBoxes);
-                int porcentSize = (int)((norY*100)/maxY);
-                int sizeBar = (int)((norY*porcentSize)/100);
-                sizePainel7 = new Dimension(sizePainel6.width,sizeBar);
-                jpanel7.setSize(sizePainel7);     
-                jpanel7.repaint();
+                                        case 0 : 
+                                            state = "Criada";
+                                            stateColor = Color.ORANGE;
+                                            break;
+                                        case 1 : 
+                                            state = "Em Análise";
+                                            stateColor = Color.GRAY;
+                                            break;
+                                        case 2 : 
+                                            state = "Em Execução";
+                                            stateColor = Color.BLUE;
+                                            break;
+                                        case 3 : 
+                                            state = "EM Verificação";
+                                            stateColor = Color.YELLOW;
+                                            break;                                 
+                                    }
+                                    jpanelBoxes.add(new BoxSTM(task.getId(),"task",state,task.getName(),dateFormat.format(task.getDateCreate()),stateColor,new Point(250,250)));  
+                                }
+                            }
+                            break;
+                        case 2 :
+                            tasks = TaskManager.getInstance().getTasksByUserAndState(UserManager.getInstance().getUserLogged(),2);
+                            for(Task task : tasks)
+                            {
+                                String state = "";
+                                Color stateColor = Color.BLUE;
+                                switch(task.getState()){
+                                    case -1 : 
+                                        state = "Cancelada";
+                                        stateColor = Color.RED;
+                                        break;
+                                    case 0 : 
+                                        state = "Criada";
+                                        stateColor = Color.ORANGE;
+                                        break;
+                                    case 1 : 
+                                        state = "Em Análise";
+                                        stateColor = Color.GRAY;
+                                        break;
+                                    case 2 : 
+                                        state = "Em Execução";
+                                        stateColor = Color.BLUE;
+                                        break;
+                                    case 3 : 
+                                        state = "EM Verificação";
+                                        stateColor = Color.YELLOW;
+                                        break;     
+                                    case 4 : 
+                                        state = "Concluída";
+                                        stateColor = Color.GREEN;
+                                        break;                               
+                                }
+                                jpanelBoxes.add(new BoxSTM(task.getId(),"task",state,task.getName(),dateFormat.format(task.getDateCreate()),stateColor,new Point(250,250)));
+                            }                        
+                            break;
+                        case 3 :
+                            tasks = TaskManager.getInstance().getTasksByUserAndState(UserManager.getInstance().getUserLogged(),4);
+                            for(Task task : tasks)
+                            {
+                                String state = "";
+                                Color stateColor = Color.BLUE;
+                                switch(task.getState()){
+                                    case -1 : 
+                                        state = "Cancelada";
+                                        stateColor = Color.RED;
+                                        break;
+                                    case 0 : 
+                                        state = "Criada";
+                                        stateColor = Color.ORANGE;
+                                        break;
+                                    case 1 : 
+                                        state = "Em Análise";
+                                        stateColor = Color.GRAY;
+                                        break;
+                                    case 2 : 
+                                        state = "Em Execução";
+                                        stateColor = Color.BLUE;
+                                        break;
+                                    case 3 : 
+                                        state = "EM Verificação";
+                                        stateColor = Color.YELLOW;
+                                        break;     
+                                    case 4 : 
+                                        state = "Concluída";
+                                        stateColor = Color.GREEN;
+                                        break;                               
+                                }
+                                jpanelBoxes.add(new BoxSTM(task.getId(),"task",state,task.getName(),dateFormat.format(task.getDateCreate()),stateColor,new Point(250,250)));
+                            }                           
+                            break;
+                    }
+                    break;  
+                case "report" :
+                    jpanelBoxes.add(new BoxSTM(1,"report","Relátorio","Usuários por Departamento","v1.0",Color.BLUE,new Point(250,250)));
+                    jpanelBoxes.add(new BoxSTM(2,"report","Relátorio","Vinculos por Usuário","v1.0",Color.BLUE,new Point(250,250)));
+                    jpanelBoxes.add(new BoxSTM(3,"report","Relátorio","Tarefas por Responsavel","v1.0",Color.BLUE,new Point(250,250)));
+                    jpanelBoxes.add(new BoxSTM(4,"report","Relátorio","Situação das Tarefas por Estado","v1.0",Color.BLUE,new Point(250,250)));
+                    break;
             }
-            
-        }
-        if(jpanelBoxes.isEmpty())
-        {
-            JLabel alldone = new JLabel();
-            alldone.setIcon(ICONALLDONE);
-            alldone.setLocation(0, 0);
-            alldone.setHorizontalAlignment(SwingConstants.CENTER);
-            alldone.setSize(sizePainel1.width,(int) (sizePainel1.height*0.9));
-            jpanel4.add(alldone);
-            
-            JLabel alldone2 = new JLabel("Tudo Pronto!");
-            alldone2.setFont(new Font("Lucida Sans Unicode", 1, 38)); 
-            alldone2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-            alldone2.setLocation(0, 510);
-            alldone2.setSize(sizePainel1.width,50);
-            jpanel4.add(alldone2);
-        }
-                
-    } 
-    
-    public void repaintMainPageView(){
+
+            return jpanelBoxes;
+        }    
+        
+    private void repaintMainPageView(){
         this.repaint();
-        this.revalidate();
+        this.revalidate(); 
     }
+    
 }
