@@ -93,6 +93,11 @@ public class BoxSTM extends JPanel {
     {
         return this.classObject;
     }
+    
+    public String getHeader()
+    {
+        return this.header;
+    }
 
     private JPanel createNewBox(Point size) {
 

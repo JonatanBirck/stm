@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
 import model.Function;
 import model.User;
@@ -111,7 +112,6 @@ public class UserView extends JFrame {
         Point locationField1 = new Point((int)((size.x-sizeField.x)/2)-5,130);
         field1.setLocation(locationField1);
         jpanel1.add(field1);
-
        
         //OPTION - SENHA
         field2 = new FieldSTM("Senha *",1, sizeField);
@@ -171,8 +171,14 @@ public class UserView extends JFrame {
         this.repaint();
         
         
-        if(user.getId() != 0){
+        if(user.getId() != 0)
+        {
             field1.setTextField(user.getLogin());
+            field2.setTextField(user.getPassword());
+            
+            JPasswordField password = (JPasswordField) field2.getField();
+            password.setEchoChar('*');
+
             field3.setTextField(user.getName());
             field4.setTextField(user.getEmail()); 
             

@@ -502,6 +502,6 @@ public class FieldSTM extends JPanel {
     public void setTextField(String text) {
         inputField.setText(text);
         inputFieldSelector.setText(text);
-
+        inputFieldPassword.setText(text);
     }
 }

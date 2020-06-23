@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.KeyAdapter;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.lang.reflect.Method;
@@ -43,9 +44,20 @@ public class ClassSelector extends JFrame {
     private final JPanel jpanel5 = new JPanel();
     private final JPanel jpanel6 = new RoundedPanel(10);
     private final JPanel jpanel7 = new RoundedPanel(10);
+    private Dimension sizePainel1 = null;
+    private Dimension sizePainel2 = null;
+    private Dimension sizePainel3 = null;
+    private Dimension sizePainel4 = null;
+    private Dimension sizePainel5 = null;
+    private Dimension sizePainel6 = null;
+    private Dimension sizePainel7 = null;
+    private Dimension sizePainel8 = null;
+    private Dimension sizePainel9 = null;
     private FieldSTM searchPanel = new FieldSTM();
-    private ArrayList<JPanel> jpanelBoxes = new ArrayList();
+    private ArrayList<BoxSTM> jpanelBoxes = new ArrayList();
+    private ArrayList<BoxSTM> hiddenJpanelBoxes = new ArrayList();
     private static ClassSelector instance = null;    
+    private boolean search = false;
     
     private String classNameOrigin = "";
     private String classNameDestiny = "";
@@ -64,6 +76,21 @@ public class ClassSelector extends JFrame {
         }
         instance = this;
     } 
+    
+    public ClassSelector(String classNameOrigin, String classNameDestiny, ArrayList<BoxSTM> boxes, boolean search) {
+        super("Selecionar");
+        this.classNameOrigin = classNameOrigin;
+        this.classNameDestiny = classNameDestiny;
+        this.size = MainView.getInstance().getSizeCRUD();
+        this.jpanelBoxes = boxes;
+        this.search = search;
+        try {
+            initComponents();
+        } catch (NoSuchMethodException ex) {
+            Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        instance = this;
+    }     
     
     public static ClassSelector getInstance() {
         return instance;
@@ -141,7 +168,7 @@ public class ClassSelector extends JFrame {
         //PAINEL BODY
         jpanel1.setBackground(new Color(200,200,200));
         jpanel1.setLocation(0,(int)(size.x*0.06));
-        Dimension sizePainel1 = new Dimension((int)(size.x*0.98),(int)(size.y*0.86));
+        sizePainel1 = new Dimension((int)(size.x*0.98),(int)(size.y*0.86));
         jpanel1.setSize(sizePainel1);
         jpanel1.setLayout(null);
         jpanel0.add(jpanel1);
@@ -149,7 +176,7 @@ public class ClassSelector extends JFrame {
         //CONTEUDO
         jpanel4.setBackground(new Color(200,200,200));
         jpanel4.setLocation((int)(size.x*0.03),0);
-        Dimension sizePainel4 = new Dimension(sizePainel1.width,sizePainel1.height);
+        sizePainel4 = new Dimension(sizePainel1.width,sizePainel1.height);
         jpanel4.setSize(sizePainel4);
         jpanel4.setLayout(null);
         jpanel1.add(jpanel4);
@@ -157,7 +184,7 @@ public class ClassSelector extends JFrame {
         //BAR RIGHT
         jpanel5.setLocation(sizePainel1.width,(int)(size.x*0.06));
         jpanel5.setBackground(new Color(200,200,200));
-        Dimension sizePainel5 = new Dimension(Resolution.getInstance().subtractDimension(size, sizePainel1).width,(int)(size.y*0.80));
+        sizePainel5 = new Dimension(Resolution.getInstance().subtractDimension(size, sizePainel1).width,(int)(size.y*0.80));
         jpanel5.setSize(sizePainel5);
         jpanel5.setLayout(null);
         this.add(jpanel5);
@@ -165,7 +192,7 @@ public class ClassSelector extends JFrame {
         jpanel6.setBackground(new Color(210,210,230));
         jpanel6.setOpaque(false);
         jpanel6.setLocation(0,0);
-        Dimension sizePainel6 = new Dimension((int)(sizePainel5.width/2),sizePainel5.height);
+        sizePainel6 = new Dimension((int)(sizePainel5.width/2),sizePainel5.height);
         jpanel6.setSize(sizePainel6);
         jpanel6.setLayout(null);
         jpanel5.add(jpanel6);
@@ -173,7 +200,7 @@ public class ClassSelector extends JFrame {
         jpanel7.setBackground(Color.BLUE);
         jpanel7.setOpaque(false);
         jpanel7.setLocation(0,0);
-        Dimension sizePainel7 = new Dimension(sizePainel6.width,sizePainel5.height);
+        sizePainel7 = new Dimension(sizePainel6.width,sizePainel5.height);
         jpanel7.setSize(sizePainel7);
         jpanel7.setLayout(null);
         jpanel6.add(jpanel7);    
@@ -181,7 +208,7 @@ public class ClassSelector extends JFrame {
         //PAINEL TOP
         jpanel2.setLocation(0,0);
         jpanel2.setBackground(new Color(200,200,200));
-        Dimension sizePainel2 = new Dimension(size.x,(int)(size.x*0.06));
+        sizePainel2 = new Dimension(size.x,(int)(size.x*0.06));
         jpanel2.setSize(sizePainel2);
         jpanel2.setLayout(null);
         this.add(jpanel2);
@@ -190,7 +217,90 @@ public class ClassSelector extends JFrame {
         searchPanel = new FieldSTM("Buscar", searchSize);
         searchPanel.setLocation(size.x-searchSize.x-50, (int)(size.x*0.02));
         jpanel2.add(searchPanel);
+        
+        searchPanel.getField().addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(java.awt.event.KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(java.awt.event.KeyEvent e) {
+                if (e.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+                    System.out.println("2");
+                    change();
+                }
+            }
+
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent e) {
+
+            }
+
+            public void change() {
+                hiddenJpanelBoxes.clear();
+                    
+                jpanelBoxes.clear();
+                jpanelBoxes = loadDate();
                 
+                boolean search2 = true;
+
+                String textInput = searchPanel.getTextField().toLowerCase();
+
+                for (BoxSTM jpanelBox : jpanelBoxes) 
+                {
+                    String title = jpanelBox.getTitle().toLowerCase();
+
+                    if (title.contains(textInput)) {
+                        hiddenJpanelBoxes.add(jpanelBox);
+                    }
+                }
+                
+                jpanelBoxes.clear();
+                jpanelBoxes = hiddenJpanelBoxes;
+                
+                repaintFrame();
+                
+                if(textInput.isEmpty())
+                {
+                    search2 = false;
+                }
+                        
+                ClassSelector selector = new ClassSelector(classNameOrigin, classNameDestiny, jpanelBoxes,search2);
+                
+                selector.setVisible(true);
+                
+                selector.searchPanel.setTextField(textInput);
+                
+            }
+        });        
+        
+        if(jpanelBoxes.isEmpty() && !search)
+        {
+           jpanelBoxes = loadDate();
+        }
+        
+        repaintBoxes();    
+    } 
+    
+    public static void disposePainel(){
+        ClassSelector.getInstance().dispose();
+    }
+    
+    private void repaintFrame()
+    {
+        this.dispose();
+        
+        /*
+        repaintBoxes();
+        
+        ClassSelector.getInstance().jpanel4.repaint();
+        ClassSelector.getInstance().jpanel4.revalidate();
+        */
+        
+    }
+    
+    private ArrayList<BoxSTM> loadDate() {
         //LOAD DATA OF CRUD
         switch(classNameDestiny){
             case "user" : 
@@ -202,25 +312,89 @@ public class ClassSelector extends JFrame {
                     switch(classNameOrigin)
                     {
                         case "department" :
+                    {
+                        try {
                             methods[0] = DepartmentView.class.getDeclaredMethod("setUser",User.class);
+                        } catch (NoSuchMethodException ex) {
+                            Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (SecurityException ex) {
+                            Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    {
+                        try {
                             methods[1] = ClassSelector.class.getDeclaredMethod("disposePainel");
+                        } catch (NoSuchMethodException ex) {
+                            Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (SecurityException ex) {
+                            Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
                             objects[0] = user;
                             break;
                         case "sector" :
+                    {
+                        try {
                             methods[0] = SectorView.class.getDeclaredMethod("setUser",User.class);
+                        } catch (NoSuchMethodException ex) {
+                            Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (SecurityException ex) {
+                            Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    {
+                        try {
                             methods[1] = ClassSelector.class.getDeclaredMethod("disposePainel");
+                        } catch (NoSuchMethodException ex) {
+                            Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (SecurityException ex) {
+                            Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
                             objects[0] = user;
                             break;
                         case "task" :
+                    {
+                        try {
                             methods[0] = TaskView.class.getDeclaredMethod("setUserResponsability",User.class);
+                        } catch (NoSuchMethodException ex) {
+                            Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (SecurityException ex) {
+                            Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    {
+                        try {
                             methods[1] = ClassSelector.class.getDeclaredMethod("disposePainel");
+                        } catch (NoSuchMethodException ex) {
+                            Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (SecurityException ex) {
+                            Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
                             objects[0] = user;
-                            break;         
+                            break;                                    
                         case "report" :
+                    {
+                        try {
                             methods[0] = ReportView.class.getDeclaredMethod("setUserResponsability",User.class);
+                        } catch (NoSuchMethodException ex) {
+                            Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (SecurityException ex) {
+                            Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    {
+                        try {
                             methods[1] = ClassSelector.class.getDeclaredMethod("disposePainel");
+                        } catch (NoSuchMethodException ex) {
+                            Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (SecurityException ex) {
+                            Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
                             objects[0] = user;
-                            break;                              
+                            break;                                                                                                                        
                     }                    
                     jpanelBoxes.add(new BoxSTM(true,methods,objects,user.getId(),"user","Usuários",user.getName(),SectorManager.getInstance().getSector(user.getFunctionId()).getName(), Color.BLUE,new Point(250,250)));
                 }
@@ -232,8 +406,20 @@ public class ClassSelector extends JFrame {
                     //CASE SECTOR ORIGIN
                     Method[] methods = {null,null};
                     Object[] objects = {null};
-                    methods[0] = SectorView.class.getDeclaredMethod("setDepartment",Department.class);
-                    methods[1] = ClassSelector.class.getDeclaredMethod("disposePainel");
+            try {
+                methods[0] = SectorView.class.getDeclaredMethod("setDepartment",Department.class);
+            } catch (NoSuchMethodException ex) {
+                Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SecurityException ex) {
+                Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                methods[1] = ClassSelector.class.getDeclaredMethod("disposePainel");
+            } catch (NoSuchMethodException ex) {
+                Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SecurityException ex) {
+                Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+            }
                     objects[0] = department;
                     
                     jpanelBoxes.add(new BoxSTM(true,methods,objects,department.getId(),"department","Departamentos",department.getName(),UserManager.getInstance().getUser(department.getManagerId()).getName(), Color.BLUE,new Point(250,250)));
@@ -246,8 +432,20 @@ public class ClassSelector extends JFrame {
                     //CASE USER ORIGIN
                     Method[] methods = {null,null};
                     Object[] objects = {null};
-                    methods[0] = UserView.class.getDeclaredMethod("setFunction",Function.class);
-                    methods[1] = ClassSelector.class.getDeclaredMethod("disposePainel");
+            try {
+                methods[0] = UserView.class.getDeclaredMethod("setFunction",Function.class);
+            } catch (NoSuchMethodException ex) {
+                Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SecurityException ex) {
+                Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                methods[1] = ClassSelector.class.getDeclaredMethod("disposePainel");
+            } catch (NoSuchMethodException ex) {
+                Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SecurityException ex) {
+                Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+            }
                     objects[0] = function;
                     
                     jpanelBoxes.add(new BoxSTM(true,methods,objects,function.getId(),"function","Funções",function.getName(),SectorManager.getInstance().getSector(function.getSectorId()).getName(), Color.BLUE,new Point(250,250)));
@@ -260,8 +458,20 @@ public class ClassSelector extends JFrame {
                     //CASE FUNCTION ORIGIN
                     Method[] methods = {null,null};
                     Object[] objects = {null};
-                    methods[0] = FunctionView.class.getDeclaredMethod("setSector",Sector.class);
-                    methods[1] = ClassSelector.class.getDeclaredMethod("disposePainel");
+            try {
+                methods[0] = FunctionView.class.getDeclaredMethod("setSector",Sector.class);
+            } catch (NoSuchMethodException ex) {
+                Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SecurityException ex) {
+                Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                methods[1] = ClassSelector.class.getDeclaredMethod("disposePainel");
+            } catch (NoSuchMethodException ex) {
+                Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SecurityException ex) {
+                Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+            }
                     objects[0] = sector;
                     
                     jpanelBoxes.add(new BoxSTM(true,methods,objects,sector.getId(),"sector","Setores",sector.getName(),UserManager.getInstance().getUser(sector.getLeaderId()).getName(), Color.BLUE,new Point(250,250)));
@@ -313,8 +523,20 @@ public class ClassSelector extends JFrame {
                 {
                     Method[] methods = {null,null};
                     Object[] objects = {null};
-                    methods[0] = ReportView.class.getDeclaredMethod("setIdStateSelected",int.class);
-                    methods[1] = ClassSelector.class.getDeclaredMethod("disposePainel");
+            try {
+                methods[0] = ReportView.class.getDeclaredMethod("setIdStateSelected",int.class);
+            } catch (NoSuchMethodException ex) {
+                Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SecurityException ex) {
+                Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                methods[1] = ClassSelector.class.getDeclaredMethod("disposePainel");
+            } catch (NoSuchMethodException ex) {
+                Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SecurityException ex) {
+                Logger.getLogger(ClassSelector.class.getName()).log(Level.SEVERE, null, ex);
+            }
                     objects[0] = state;
                     
                     Color stateColor = Color.BLUE;
@@ -345,10 +567,15 @@ public class ClassSelector extends JFrame {
                 break;
         }
         
+        return jpanelBoxes;
+    }
+    
+    private void repaintBoxes()
+    {
         //PAINT CRUD
         int rowBoxes = 0;
         int columnBoxes = 0;
-        for(JPanel jpanelBox : jpanelBoxes)
+        for(BoxSTM jpanelBox : jpanelBoxes)
         {
             if( rowBoxes == 4 )
             {
@@ -377,12 +604,6 @@ public class ClassSelector extends JFrame {
                 jpanel7.repaint();
             }
             
-        }
-                
-    } 
-    
-    public static void disposePainel(){
-        ClassSelector.getInstance().dispose();
+        }        
     }
-    
 }
