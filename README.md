@@ -30,11 +30,14 @@ STM é uma aplicação desktop que permite aos usuários gerencias as tarefas de
 
 1- Para instalar o ambiente:
 > Download PostgreSQL
+
 > Download Netbeans and JDK
 
 2- Preparar a aplicação
 > Criar o banco de dados manualmente
+
 > Criar as tabelas manualmente, arquivo "tablesDB.sql"
+
 > Configurar classe ConnectionDB com as conexões
 
 ---
