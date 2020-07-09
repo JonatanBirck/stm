@@ -1,5 +1,0 @@
-1- download postgres and netbeans
-2 - create manually a database "stm" and change the variables configs in ConnectionDB.java
-3 - create tables, using "tablesDB.sql"
-4 - just run 
-
