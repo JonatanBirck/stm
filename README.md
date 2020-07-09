@@ -14,7 +14,7 @@
 ![gif3](info/gif3.gif)
 ![gif4](info/gif4.gif)
 
-<div>
+</div>
 
 ## :rocket: Tecnologias
 
