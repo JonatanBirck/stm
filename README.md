@@ -33,7 +33,7 @@ STM é uma aplicação desktop que permite aos usuários gerencias as tarefas de
 
 > Download Netbeans and JDK
 
-2- Preparar a aplicação
+2- Preparar a aplicação:
 > Criar o banco de dados manualmente
 
 > Criar as tabelas manualmente, arquivo "tablesDB.sql"
