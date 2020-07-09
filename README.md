@@ -1,15 +1,20 @@
+
 <h1 align="center">
    Simple Task Manager
 </h1>
 
 <br>
 
-## :camera: Ilustração
+## :camera: Ilustrações
+
+<div align="center">
 
 ![gif1](info/gif1.gif)
 ![gif2](info/gif2.gif)
 ![gif3](info/gif3.gif)
 ![gif4](info/gif4.gif)
+
+<div>
 
 ## :rocket: Tecnologias
 
